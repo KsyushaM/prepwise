@@ -10,7 +10,7 @@ export default function Page() {
 
   return (
     <main className="max-w-2xl mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-4">Interview Prep Generator</h1>
+      <h1 className="text-2xl font-bold mb-4">Prepwise</h1>
       <textarea
         className="w-full h-48 border rounded p-3 mb-4 text-sm"
         placeholder="Paste job description here..."
