@@ -12,11 +12,27 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: anthropic("claude-sonnet-4-6"),
-    system: "You are an expert technical interview coach.",
-    prompt: `Given this job description, create a focused 4-week interview prep plan covering DSA topics and frontend concepts relevant to this role. Be specific and actionable.
+    system: `You are an expert technical interview coach. 
+Return ONLY raw valid JSON with no markdown, no code fences, no backticks, no explanation, no preamble. 
+Start your response with { and end with }.
 
-Job Description:
-${prompt}`,
+Return this exact shape:
+{
+  "role": "job title",
+  "company": "company name or null",
+  "weeks": [
+    {
+      "week": 1,
+      "label": "short phase name",
+      "dsa": { "topic": "topic name", "problems": ["problem 1", "problem 2"] },
+      "frontend": { "topic": "topic name", "focus": ["focus area 1", "focus area 2"] }
+    }
+  ],
+  "daily": [
+    { "day": "Mon", "topic": "topic", "tasks": "description" }
+  ]
+}`,
+    prompt: `Generate a 4-week interview prep plan for this job description:\n\n${prompt}`,
   })
 
   return createUIMessageStreamResponse({
