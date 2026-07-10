@@ -51,10 +51,20 @@ export default function Page() {
     },
   })
 
+  const [lastInput, setLastInput] = useState<string | null>(null)
+
   const handleGenerate = () => {
+    const currentInput = JSON.stringify({ profile, company, position, jd })
+
+    if (currentInput === lastInput && plan) {
+      setStep("plan")
+      return
+    }
+
     setPlan(null)
     setError("")
-    complete(JSON.stringify({ profile, company, position, jd }))
+    setLastInput(currentInput)
+    complete(currentInput)
   }
 
   const weakAreaOptions = ["DSA", "Frontend", "System Design", "Behavioral"]
