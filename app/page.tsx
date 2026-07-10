@@ -23,19 +23,6 @@ type PrepPlan = {
   weeks: Week[]
 }
 
-const weekColors = [
-  { bg: "bg-purple-50", border: "border-purple-200", label: "text-purple-600" },
-  { bg: "bg-pink-50", border: "border-pink-200", label: "text-pink-600" },
-  { bg: "bg-blue-50", border: "border-blue-200", label: "text-blue-600" },
-  { bg: "bg-teal-50", border: "border-teal-200", label: "text-teal-600" },
-  { bg: "bg-violet-50", border: "border-violet-200", label: "text-violet-600" },
-  {
-    bg: "bg-fuchsia-50",
-    border: "border-fuchsia-200",
-    label: "text-fuchsia-600",
-  },
-]
-
 export default function Page() {
   const [step, setStep] = useState<"profile" | "jd" | "plan">("profile")
   const [profile, setProfile] = useState<Profile>({
@@ -73,38 +60,82 @@ export default function Page() {
   const weakAreaOptions = ["DSA", "Frontend", "System Design", "Behavioral"]
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-12">
-      <div className="flex items-center gap-2 mb-1">
-        <div className="w-7 h-7 bg-purple-600 rounded-md flex items-center justify-center">
-          <span className="text-white text-xs font-bold">✦</span>
+    <main style={{ maxWidth: 680, margin: "0 auto", padding: "3rem 1.5rem" }}>
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginBottom: 4,
+        }}
+      >
+        <div
+          style={{
+            width: 28,
+            height: 28,
+            background: "var(--accent)",
+            borderRadius: 8,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span style={{ color: "#fff", fontSize: 12 }}>✦</span>
         </div>
         <span
-          style={{ fontFamily: "Fraunces, serif" }}
-          className="text-lg font-bold"
+          style={{
+            fontFamily: "Fraunces, serif",
+            fontSize: 26,
+            fontWeight: 900,
+            color: "var(--text-dark)",
+          }}
         >
           Prepwise
         </span>
       </div>
-      <p className="text-sm text-gray-500 mb-8">
+      <p
+        style={{
+          fontSize: 14,
+          color: "var(--text-muted)",
+          marginBottom: "2rem",
+        }}
+      >
         Paste a job description and get a personalized interview prep plan.
       </p>
 
       {/* Step 1: Profile */}
       {step === "profile" && (
-        <div className="border border-purple-100 rounded-xl p-6 bg-white space-y-5 shadow-[3px_3px_0px_#ddd0f0]">
+        <div className="pw-card" style={{ padding: "1.5rem" }}>
           <h2
-            style={{ fontFamily: "Fraunces, serif" }}
-            className="font-bold text-gray-900"
+            style={{
+              fontFamily: "Fraunces, serif",
+              fontSize: 20,
+              fontWeight: 700,
+              color: "var(--text-dark)",
+              marginBottom: "1.5rem",
+            }}
           >
             Tell us about yourself
           </h2>
 
-          <div>
-            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider block mb-2">
-              Years of experience
-            </label>
+          <div style={{ marginBottom: "1.25rem" }}>
+            <label className="pw-label">Years of experience</label>
             <select
-              className="w-full border rounded-lg p-2 text-sm text-gray-700"
+              style={{
+                width: "100%",
+                border: "1.5px solid var(--card-border)",
+                borderRadius: 10,
+                padding: "8px 12px",
+                fontSize: 14,
+                color: "var(--text-dark)",
+                background: "#fff",
+                outline: "none",
+                appearance: "none",
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23b09ac8' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right 12px center",
+              }}
               value={profile.experience}
               onChange={(e) =>
                 setProfile({ ...profile, experience: e.target.value })
@@ -119,11 +150,9 @@ export default function Page() {
             </select>
           </div>
 
-          <div>
-            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider block mb-2">
-              Weak areas
-            </label>
-            <div className="flex gap-2 flex-wrap">
+          <div style={{ marginBottom: "1.25rem" }}>
+            <label className="pw-label">Weak areas</label>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {weakAreaOptions.map((area) => (
                 <button
                   key={area}
@@ -136,11 +165,23 @@ export default function Page() {
                         : [...profile.weakAreas, area],
                     })
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
-                    profile.weakAreas.includes(area)
-                      ? "bg-purple-600 text-white border-purple-600"
-                      : "bg-white text-gray-600 border-gray-200"
-                  }`}
+                  style={{
+                    padding: "6px 14px",
+                    borderRadius: 8,
+                    fontSize: 13,
+                    border: "1.5px solid",
+                    cursor: "pointer",
+                    fontFamily: "DM Sans, sans-serif",
+                    background: profile.weakAreas.includes(area)
+                      ? "var(--accent)"
+                      : "#fff",
+                    color: profile.weakAreas.includes(area)
+                      ? "#fff"
+                      : "var(--text-muted)",
+                    borderColor: profile.weakAreas.includes(area)
+                      ? "var(--accent)"
+                      : "var(--card-border)",
+                  }}
                 >
                   {area}
                 </button>
@@ -148,12 +189,23 @@ export default function Page() {
             </div>
           </div>
 
-          <div>
-            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider block mb-2">
-              Hours per day
-            </label>
+          <div style={{ marginBottom: "1.25rem" }}>
+            <label className="pw-label">Hours per day</label>
             <select
-              className="w-full border rounded-lg p-2 text-sm text-gray-700"
+              style={{
+                width: "100%",
+                border: "1.5px solid var(--card-border)",
+                borderRadius: 10,
+                padding: "8px 12px",
+                fontSize: 14,
+                color: "var(--text-dark)",
+                background: "#fff",
+                outline: "none",
+                appearance: "none",
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23b09ac8' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right 12px center",
+              }}
               value={profile.hoursPerDay}
               onChange={(e) =>
                 setProfile({ ...profile, hoursPerDay: e.target.value })
@@ -167,20 +219,28 @@ export default function Page() {
             </select>
           </div>
 
-          <div>
-            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider block mb-2">
-              Prep timeline
-            </label>
-            <div className="flex gap-2">
+          <div style={{ marginBottom: "1.5rem" }}>
+            <label className="pw-label">Prep timeline</label>
+            <div style={{ display: "flex", gap: 8 }}>
               {["2", "4", "6"].map((w) => (
                 <button
                   key={w}
                   onClick={() => setProfile({ ...profile, weeks: w })}
-                  className={`flex-1 py-2 rounded-lg text-sm border transition-colors ${
-                    profile.weeks === w
-                      ? "bg-purple-600 text-white border-purple-600"
-                      : "bg-white text-gray-600 border-gray-200"
-                  }`}
+                  style={{
+                    flex: 1,
+                    padding: "8px",
+                    borderRadius: 10,
+                    fontSize: 13,
+                    border: "1.5px solid",
+                    cursor: "pointer",
+                    fontFamily: "DM Sans, sans-serif",
+                    background: profile.weeks === w ? "var(--accent)" : "#fff",
+                    color: profile.weeks === w ? "#fff" : "var(--text-muted)",
+                    borderColor:
+                      profile.weeks === w
+                        ? "var(--accent)"
+                        : "var(--card-border)",
+                  }}
                 >
                   {w} weeks
                 </button>
@@ -189,46 +249,87 @@ export default function Page() {
           </div>
 
           <button
+            className="pw-btn pw-btn-full"
             disabled={!profile.experience || !profile.hoursPerDay}
             onClick={() => setStep("jd")}
-            className="w-full bg-purple-600 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-40"
           >
             Continue →
           </button>
         </div>
       )}
 
-      {/* Step 2: JD Input */}
+      {/* Step 2: JD */}
       {step === "jd" && (
-        <div className="border rounded-xl p-5 bg-white space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="font-semibold text-gray-900">Job details</h2>
+        <div className="pw-card" style={{ padding: "1.5rem" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1.25rem",
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: "Fraunces, serif",
+                fontSize: 20,
+                fontWeight: 700,
+                color: "var(--text-dark)",
+              }}
+            >
+              Job details
+            </h2>
             <button
               onClick={() => setStep("profile")}
-              className="text-xs text-gray-400 hover:text-gray-600"
+              style={{
+                fontSize: 12,
+                color: "var(--text-label)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
             >
               ← Edit profile
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 12,
+              marginBottom: "1rem",
+            }}
+          >
             <div>
-              <label className="text-xs font-medium text-gray-400 uppercase tracking-wider block mb-1">
-                Company
-              </label>
+              <label className="pw-label">Company</label>
               <input
-                className="w-full border rounded-lg p-2 text-sm text-gray-700"
+                style={{
+                  width: "100%",
+                  border: "1.5px solid var(--card-border)",
+                  borderRadius: 10,
+                  padding: "8px 12px",
+                  fontSize: 14,
+                  color: "var(--text-dark)",
+                  outline: "none",
+                }}
                 placeholder="e.g. Stripe"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-gray-400 uppercase tracking-wider block mb-1">
-                Position
-              </label>
+              <label className="pw-label">Position</label>
               <input
-                className="w-full border rounded-lg p-2 text-sm text-gray-700"
+                style={{
+                  width: "100%",
+                  border: "1.5px solid var(--card-border)",
+                  borderRadius: 10,
+                  padding: "8px 12px",
+                  fontSize: 14,
+                  color: "var(--text-dark)",
+                  outline: "none",
+                }}
                 placeholder="e.g. Senior Frontend Engineer"
                 value={position}
                 onChange={(e) => setPosition(e.target.value)}
@@ -236,24 +337,37 @@ export default function Page() {
             </div>
           </div>
 
-          <div>
-            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider block mb-1">
-              Job description
-            </label>
+          <div style={{ marginBottom: "1rem" }}>
+            <label className="pw-label">Job description</label>
             <textarea
-              className="w-full h-48 border rounded-lg p-3 text-sm text-gray-700 resize-none"
+              style={{
+                width: "100%",
+                height: 180,
+                border: "1.5px solid var(--card-border)",
+                borderRadius: 10,
+                padding: "10px 12px",
+                fontSize: 14,
+                color: "var(--text-dark)",
+                outline: "none",
+                resize: "none",
+                fontFamily: "DM Sans, sans-serif",
+              }}
               placeholder="Paste the full job description here..."
               value={jd}
               onChange={(e) => setJd(e.target.value)}
             />
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && (
+            <p style={{ color: "#e53e3e", fontSize: 13, marginBottom: 8 }}>
+              {error}
+            </p>
+          )}
 
           <button
+            className="pw-btn pw-btn-full"
             disabled={isLoading || !jd}
             onClick={handleGenerate}
-            className="w-full bg-purple-600 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-40"
           >
             {isLoading ? "Generating..." : "✦ Generate prep plan"}
           </button>
@@ -262,52 +376,216 @@ export default function Page() {
 
       {/* Step 3: Plan */}
       {step === "plan" && plan && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div className="border rounded-xl p-4 bg-white flex-1 mr-3">
-              <p className="font-medium text-gray-900">{plan.role}</p>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            <div
+              className="pw-card"
+              style={{ flex: 1, marginRight: 12, marginBottom: 0 }}
+            >
+              <p
+                style={{
+                  fontFamily: "Fraunces, serif",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: "var(--text-dark)",
+                }}
+              >
+                {plan.role}
+              </p>
               {plan.company && (
-                <p className="text-sm text-gray-400">{plan.company}</p>
+                <p
+                  style={{
+                    fontSize: 13,
+                    color: "var(--text-label)",
+                    marginTop: 2,
+                  }}
+                >
+                  {plan.company}
+                </p>
               )}
             </div>
             <button
               onClick={() => setStep("jd")}
-              className="text-xs text-gray-400 hover:text-gray-600 whitespace-nowrap"
+              style={{
+                fontSize: 12,
+                color: "var(--text-label)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
             >
               ← New plan
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 12,
+              marginBottom: "1rem",
+            }}
+          >
             {plan.weeks.map((week, i) => {
-              const color = weekColors[i % weekColors.length]
+              const colors = [
+                {
+                  bg: "#F3EEFF",
+                  border: "#D4B8FF",
+                  shadow: "#D4B8FF",
+                  label: "#7C3AED",
+                },
+                {
+                  bg: "#FFF0F8",
+                  border: "#FFB8DC",
+                  shadow: "#FFB8DC",
+                  label: "#C0407A",
+                },
+                {
+                  bg: "#EEF4FF",
+                  border: "#C5D8FF",
+                  shadow: "#C5D8FF",
+                  label: "#3B6FD4",
+                },
+                {
+                  bg: "#EEFAF8",
+                  border: "#B8EDE8",
+                  shadow: "#B8EDE8",
+                  label: "#2A9E90",
+                },
+                {
+                  bg: "#FFFBEE",
+                  border: "#FFE8A0",
+                  shadow: "#FFE8A0",
+                  label: "#B07A10",
+                },
+                {
+                  bg: "#FFF0F0",
+                  border: "#FFB8B8",
+                  shadow: "#FFB8B8",
+                  label: "#C04040",
+                },
+              ]
+              const c = colors[i % colors.length]
               return (
                 <div
                   key={week.week}
-                  className={`border rounded-xl p-4 ${color.bg} ${color.border}`}
+                  style={{
+                    background: c.bg,
+                    border: `1.5px solid ${c.border}`,
+                    borderRadius: 14,
+                    padding: "1rem",
+                    boxShadow: `3px 3px 0 ${c.shadow}`,
+                  }}
                 >
                   <p
-                    className={`text-xs font-semibold uppercase tracking-wider mb-1 ${color.label}`}
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 500,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: c.label,
+                      marginBottom: 3,
+                    }}
                   >
                     Week {week.week}
                   </p>
-                  <p className="font-medium text-gray-900 text-sm mb-3">
+                  <p
+                    style={{
+                      fontFamily: "Fraunces, serif",
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: "var(--text-dark)",
+                      marginBottom: 10,
+                    }}
+                  >
                     {week.label}
                   </p>
-                  <p className="text-xs text-gray-500 font-medium mb-1">
+                  <p
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 500,
+                      color: "var(--text-muted)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      marginBottom: 4,
+                    }}
+                  >
                     DSA · {week.dsa.topic}
                   </p>
-                  <ul className="text-xs text-gray-600 space-y-0.5 mb-3">
+                  <ul
+                    style={{ listStyle: "none", padding: 0, marginBottom: 8 }}
+                  >
                     {week.dsa.problems.map((p) => (
-                      <li key={p}>· {p}</li>
+                      <li
+                        key={p}
+                        style={{
+                          fontSize: 11,
+                          color: "#3d2860",
+                          lineHeight: 1.6,
+                          paddingLeft: 12,
+                          position: "relative",
+                        }}
+                      >
+                        <span
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 4,
+                            fontSize: 7,
+                            color: "var(--accent)",
+                          }}
+                        >
+                          ✦
+                        </span>
+                        {p}
+                      </li>
                     ))}
                   </ul>
-                  <p className="text-xs text-gray-500 font-medium mb-1">
+                  <p
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 500,
+                      color: "var(--text-muted)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      marginBottom: 4,
+                    }}
+                  >
                     Frontend · {week.frontend.topic}
                   </p>
-                  <ul className="text-xs text-gray-600 space-y-0.5">
+                  <ul style={{ listStyle: "none", padding: 0 }}>
                     {week.frontend.focus.map((f) => (
-                      <li key={f}>· {f}</li>
+                      <li
+                        key={f}
+                        style={{
+                          fontSize: 11,
+                          color: "#3d2860",
+                          lineHeight: 1.6,
+                          paddingLeft: 12,
+                          position: "relative",
+                        }}
+                      >
+                        <span
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 4,
+                            fontSize: 7,
+                            color: "var(--accent)",
+                          }}
+                        >
+                          ✦
+                        </span>
+                        {f}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -315,30 +593,74 @@ export default function Page() {
             })}
           </div>
 
-          {plan.weeks.map((week, i) => (
-            <div key={week.week} className="border rounded-xl p-4 bg-white">
-              <p
-                className={`text-xs font-semibold uppercase tracking-wider mb-3 ${weekColors[i % weekColors.length].label}`}
-              >
-                Week {week.week} · Daily breakdown
-              </p>
-              <div className="space-y-3">
-                {week.daily.map((d) => (
-                  <div key={d.day} className="flex gap-3">
-                    <span className="text-xs font-semibold text-gray-400 w-8 pt-0.5 shrink-0">
-                      {d.day}
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">
-                        {d.topic}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-0.5">{d.tasks}</p>
+          {plan.weeks.map((week, i) => {
+            const labelColors = [
+              "#7C3AED",
+              "#C0407A",
+              "#3B6FD4",
+              "#2A9E90",
+              "#B07A10",
+              "#C04040",
+            ]
+            return (
+              <div key={week.week} className="pw-card">
+                <p
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 500,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    color: labelColors[i % labelColors.length],
+                    marginBottom: "1rem",
+                  }}
+                >
+                  Week {week.week} · Daily breakdown
+                </p>
+                <div>
+                  {week.daily.map((d) => (
+                    <div
+                      key={d.day}
+                      style={{ display: "flex", gap: 12, marginBottom: 12 }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 500,
+                          color: "var(--text-label)",
+                          width: 28,
+                          paddingTop: 2,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {d.day}
+                      </span>
+                      <div>
+                        <p
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 500,
+                            color: "var(--text-dark)",
+                            marginBottom: 2,
+                          }}
+                        >
+                          {d.topic}
+                        </p>
+                        <p
+                          style={{
+                            fontSize: 12,
+                            color: "var(--text-muted)",
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          {d.tasks}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </main>
