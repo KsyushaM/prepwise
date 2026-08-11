@@ -1,27 +1,9 @@
 "use client"
 import { useCompletion } from "@ai-sdk/react"
 import { useState } from "react"
-
-type Profile = {
-  experience: string
-  weakAreas: string[]
-  hoursPerDay: string
-  weeks: string
-}
-
-type Week = {
-  week: number
-  label: string
-  dsa: { topic: string; problems: string[] }
-  frontend: { topic: string; focus: string[] }
-  daily: { day: string; topic: string; tasks: string }[]
-}
-
-type PrepPlan = {
-  role: string
-  company: string | null
-  weeks: Week[]
-}
+import type { Profile } from "@/types/profile"
+import type { PrepPlan } from "@/types/prep-plan"
+import { ProfileForm } from "@/components/ProfileForm"
 
 export default function Page() {
   const [step, setStep] = useState<"profile" | "jd" | "plan">("profile")
@@ -115,158 +97,7 @@ export default function Page() {
       </p>
 
       {/* Step 1: Profile */}
-      {step === "profile" && (
-        <div className="pw-card" style={{ padding: "1.5rem" }}>
-          <h2
-            style={{
-              fontFamily: "Fraunces, serif",
-              fontSize: 20,
-              fontWeight: 700,
-              color: "var(--text-dark)",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Tell us about yourself
-          </h2>
-
-          <div style={{ marginBottom: "1.25rem" }}>
-            <label className="pw-label">Years of experience</label>
-            <select
-              style={{
-                width: "100%",
-                border: "1.5px solid var(--card-border)",
-                borderRadius: 10,
-                padding: "8px 12px",
-                fontSize: 14,
-                color: "var(--text-dark)",
-                background: "#fff",
-                outline: "none",
-                appearance: "none",
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23b09ac8' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right 12px center",
-              }}
-              value={profile.experience}
-              onChange={(e) =>
-                setProfile({ ...profile, experience: e.target.value })
-              }
-            >
-              <option value="">Select...</option>
-              <option value="0-1">0–1 years</option>
-              <option value="1-3">1–3 years</option>
-              <option value="3-5">3–5 years</option>
-              <option value="5-10">5–10 years</option>
-              <option value="10+">10+ years</option>
-            </select>
-          </div>
-
-          <div style={{ marginBottom: "1.25rem" }}>
-            <label className="pw-label">Weak areas</label>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {weakAreaOptions.map((area) => (
-                <button
-                  key={area}
-                  onClick={() => {
-                    const already = profile.weakAreas.includes(area)
-                    setProfile({
-                      ...profile,
-                      weakAreas: already
-                        ? profile.weakAreas.filter((a) => a !== area)
-                        : [...profile.weakAreas, area],
-                    })
-                  }}
-                  style={{
-                    padding: "6px 14px",
-                    borderRadius: 8,
-                    fontSize: 13,
-                    border: "1.5px solid",
-                    cursor: "pointer",
-                    fontFamily: "DM Sans, sans-serif",
-                    background: profile.weakAreas.includes(area)
-                      ? "var(--accent)"
-                      : "#fff",
-                    color: profile.weakAreas.includes(area)
-                      ? "#fff"
-                      : "var(--text-muted)",
-                    borderColor: profile.weakAreas.includes(area)
-                      ? "var(--accent)"
-                      : "var(--card-border)",
-                  }}
-                >
-                  {area}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "1.25rem" }}>
-            <label className="pw-label">Hours per day</label>
-            <select
-              style={{
-                width: "100%",
-                border: "1.5px solid var(--card-border)",
-                borderRadius: 10,
-                padding: "8px 12px",
-                fontSize: 14,
-                color: "var(--text-dark)",
-                background: "#fff",
-                outline: "none",
-                appearance: "none",
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23b09ac8' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right 12px center",
-              }}
-              value={profile.hoursPerDay}
-              onChange={(e) =>
-                setProfile({ ...profile, hoursPerDay: e.target.value })
-              }
-            >
-              <option value="">Select...</option>
-              <option value="0.5">30 min</option>
-              <option value="1">1 hour</option>
-              <option value="2">2 hours</option>
-              <option value="3">3+ hours</option>
-            </select>
-          </div>
-
-          <div style={{ marginBottom: "1.5rem" }}>
-            <label className="pw-label">Prep timeline</label>
-            <div style={{ display: "flex", gap: 8 }}>
-              {["2", "4", "6"].map((w) => (
-                <button
-                  key={w}
-                  onClick={() => setProfile({ ...profile, weeks: w })}
-                  style={{
-                    flex: 1,
-                    padding: "8px",
-                    borderRadius: 10,
-                    fontSize: 13,
-                    border: "1.5px solid",
-                    cursor: "pointer",
-                    fontFamily: "DM Sans, sans-serif",
-                    background: profile.weeks === w ? "var(--accent)" : "#fff",
-                    color: profile.weeks === w ? "#fff" : "var(--text-muted)",
-                    borderColor:
-                      profile.weeks === w
-                        ? "var(--accent)"
-                        : "var(--card-border)",
-                  }}
-                >
-                  {w} weeks
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            className="pw-btn pw-btn-full"
-            disabled={!profile.experience || !profile.hoursPerDay}
-            onClick={() => setStep("jd")}
-          >
-            Continue →
-          </button>
-        </div>
-      )}
+      {step === "profile" && <ProfileForm onContinue={() => setStep("jd")} />}
 
       {/* Step 2: JD */}
       {step === "jd" && (
@@ -486,7 +317,7 @@ export default function Page() {
               const c = colors[i % colors.length]
               return (
                 <div
-                  key={week.week}
+                  key={week.weekNumber}
                   style={{
                     background: c.bg,
                     border: `1.5px solid ${c.border}`,
@@ -505,7 +336,7 @@ export default function Page() {
                       marginBottom: 3,
                     }}
                   >
-                    Week {week.week}
+                    Week {week.weekNumber}
                   </p>
                   <p
                     style={{
@@ -613,7 +444,7 @@ export default function Page() {
               "#C04040",
             ]
             return (
-              <div key={week.week} className="pw-card">
+              <div key={week.weekNumber} className="pw-card">
                 <p
                   style={{
                     fontSize: 11,
@@ -624,7 +455,7 @@ export default function Page() {
                     marginBottom: "1rem",
                   }}
                 >
-                  Week {week.week} · Daily breakdown
+                  Week {week.weekNumber} · Daily breakdown
                 </p>
                 <div>
                   {week.daily.map((d) => (
