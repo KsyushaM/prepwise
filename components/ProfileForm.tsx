@@ -1,19 +1,17 @@
 "use client"
-import { useState } from "react"
 import type { Profile } from "@/types/profile"
 
 type ProfileFormProps = {
+  profile: Profile
+  onChange: (value: Profile) => void
   onContinue: () => void
 }
 
-export function ProfileForm({ onContinue }: ProfileFormProps) {
-  const [profile, setProfile] = useState<Profile>({
-    experience: "",
-    weakAreas: [],
-    hoursPerDay: "",
-    weeks: "4",
-  })
-
+export function ProfileForm({
+  profile,
+  onChange,
+  onContinue,
+}: ProfileFormProps) {
   const weakAreaOptions = ["DSA", "Frontend", "System Design", "Behavioral"]
 
   return (
@@ -48,9 +46,7 @@ export function ProfileForm({ onContinue }: ProfileFormProps) {
             backgroundPosition: "right 12px center",
           }}
           value={profile.experience}
-          onChange={(e) =>
-            setProfile({ ...profile, experience: e.target.value })
-          }
+          onChange={(e) => onChange({ ...profile, experience: e.target.value })}
         >
           <option value="">Select...</option>
           <option value="0-1">0–1 years</option>
@@ -69,7 +65,7 @@ export function ProfileForm({ onContinue }: ProfileFormProps) {
               key={area}
               onClick={() => {
                 const already = profile.weakAreas.includes(area)
-                setProfile({
+                onChange({
                   ...profile,
                   weakAreas: already
                     ? profile.weakAreas.filter((a) => a !== area)
@@ -119,7 +115,7 @@ export function ProfileForm({ onContinue }: ProfileFormProps) {
           }}
           value={profile.hoursPerDay}
           onChange={(e) =>
-            setProfile({ ...profile, hoursPerDay: e.target.value })
+            onChange({ ...profile, hoursPerDay: e.target.value })
           }
         >
           <option value="">Select...</option>
@@ -136,7 +132,7 @@ export function ProfileForm({ onContinue }: ProfileFormProps) {
           {["2", "4", "6"].map((w) => (
             <button
               key={w}
-              onClick={() => setProfile({ ...profile, weeks: w })}
+              onClick={() => onChange({ ...profile, weeks: w })}
               style={{
                 flex: 1,
                 padding: "8px",
