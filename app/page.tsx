@@ -2,10 +2,10 @@
 import { useCompletion } from "@ai-sdk/react"
 import { useState } from "react"
 import type { Profile } from "@/types/profile"
-import type { PrepPlan } from "@/types/prep-plan"
 import { ProfileForm } from "@/components/ProfileForm"
 import { JobForm } from "@/components/JobForm"
 import { PrepPlanView } from "@/components/PrepPlanView"
+import { prepPlanSchema, PrepPlan } from "@/schemas/prep-plan"
 
 export default function Page() {
   const [step, setStep] = useState<"profile" | "jd" | "plan">("profile")
@@ -24,11 +24,23 @@ export default function Page() {
   const { complete, isLoading } = useCompletion({
     api: "/api/prep",
     onFinish: (_, completion) => {
+      setError("")
+
       try {
         const clean = completion.replace(/```json|```/g, "").trim()
-        setPlan(JSON.parse(clean))
+        const parsed = JSON.parse(clean)
+
+        const result = prepPlanSchema.safeParse(parsed)
+
+        if (!result.success) {
+          setError(
+            "The generated prep plan had an invalid format. Please try again.",
+          )
+          return
+        }
+
+        setPlan(result.data)
         setStep("plan")
-        setError("")
       } catch {
         setError("Failed to parse response. Try again.")
       }

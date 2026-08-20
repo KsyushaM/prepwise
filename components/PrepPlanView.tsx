@@ -1,4 +1,4 @@
-import type { PrepPlan } from "@/types/prep-plan"
+import type { PrepPlan } from "@/schemas/prep-plan"
 
 type PrepPlanViewProps = {
   plan: PrepPlan

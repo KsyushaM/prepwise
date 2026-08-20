@@ -23,7 +23,7 @@ Return this exact shape:
   "company": "company name or null",
   "weeks": [
     {
-      "week": 1,
+      "weekNumber": 1,
       "label": "short phase name",
       "dsa": { "topic": "topic name", "problems": ["problem 1", "problem 2"] },
       "frontend": { "topic": "topic name", "focus": ["focus area 1", "focus area 2"] },
